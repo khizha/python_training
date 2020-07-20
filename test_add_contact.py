@@ -14,15 +14,20 @@ class TestAddContact(unittest.TestCase):
 
     def test_add_contact(self):
         wd = self.wd
-        wd.get("http://localhost/addressbook/")
-        wd.find_element_by_name("user").clear()
-        wd.find_element_by_name("user").send_keys("admin")
-        wd.find_element_by_name("pass").click()
-        wd.find_element_by_name("pass").clear()
-        wd.find_element_by_name("pass").send_keys("secret")
-        wd.find_element_by_xpath("//input[@value='Login']").click()
-        wd.find_element_by_id("header").click()
-        wd.find_element_by_link_text("add new").click()
+        self.open_home_page(wd)
+        self.login(wd)
+        self.open_new_contact_page(wd)
+        self.fill_in_new_contact_data(wd)
+        self.submit_created_contact(wd)
+        self.logout(wd)
+
+    def logout(self, wd):
+        wd.find_element_by_link_text("Logout").click()
+
+    def submit_created_contact(self, wd):
+        wd.find_element_by_xpath("(//input[@name='submit'])[2]").click()
+
+    def fill_in_new_contact_data(self, wd):
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
         wd.find_element_by_name("firstname").send_keys("fffffff")
@@ -36,9 +41,9 @@ class TestAddContact(unittest.TestCase):
         wd.find_element_by_name("nickname").click()
         wd.find_element_by_name("nickname").clear()
         wd.find_element_by_name("nickname").send_keys("kkkkkkkkkkk")
-        #driver.find_element_by_name("photo").click()
-        #driver.find_element_by_name("photo").clear()
-        #driver.find_element_by_name("photo").send_keys("C:\\Users\\Alexe\\OneDrive\\Picture\\no_avatar-a59d170622fa19bc16aae3756b1e8db1.png")
+        # driver.find_element_by_name("photo").click()
+        # driver.find_element_by_name("photo").clear()
+        # driver.find_element_by_name("photo").send_keys("C:\\Users\\Alexe\\OneDrive\\Picture\\no_avatar-a59d170622fa19bc16aae3756b1e8db1.png")
         wd.find_element_by_name("title").click()
         wd.find_element_by_name("title").clear()
         wd.find_element_by_name("title").send_keys("ttttttttt")
@@ -100,9 +105,22 @@ class TestAddContact(unittest.TestCase):
         wd.find_element_by_name("notes").click()
         wd.find_element_by_name("notes").clear()
         wd.find_element_by_name("notes").send_keys("ddddddddddddddddddddddd")
-        wd.find_element_by_xpath("(//input[@name='submit'])[2]").click()
-        wd.find_element_by_link_text("Logout").click()
-    
+
+    def open_new_contact_page(self, wd):
+        wd.find_element_by_id("header").click()
+        wd.find_element_by_link_text("add new").click()
+
+    def login(self, wd):
+        wd.find_element_by_name("user").clear()
+        wd.find_element_by_name("user").send_keys("admin")
+        wd.find_element_by_name("pass").click()
+        wd.find_element_by_name("pass").clear()
+        wd.find_element_by_name("pass").send_keys("secret")
+        wd.find_element_by_xpath("//input[@value='Login']").click()
+
+    def open_home_page(self, wd):
+        wd.get("http://localhost/addressbook/")
+
     def is_element_present(self, how, what):
         try: self.wd.find_element(by=how, value=what)
         except NoSuchElementException as e: return False
