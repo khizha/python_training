@@ -2,12 +2,31 @@
 from fixture.application import Application
 import pytest
 
-#@pytest.fixture()
-@pytest.fixture(scope = "session")
+# global variable containing fixture
+fixture = None
+
+@pytest.fixture()
+#@pytest.fixture(scope = "session")
 
 def app(request):
-    fixture = Application()
-    fixture.session.login(username="admin", password="secret")
+    # use the global variable "fixture"
+    global fixture
+
+    # check if fixture does not exist
+    if fixture is None:
+        fixture = Application()
+        fixture.session.login(username="admin", password="secret")
+    else:
+        # check if the existing fixture is corrupted
+        if not fixture.is_valid():
+            # create a new fixture and perform login
+            fixture = Application()
+            fixture.session.login(username="admin", password="secret")
+    return fixture
+
+
+@pytest.fixture(scope="session", autouse=True)
+def stop(request):
     def fin():
         fixture.session.logout()
         fixture.destroy()
