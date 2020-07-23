@@ -15,20 +15,19 @@ def app(request):
     # check if fixture does not exist
     if fixture is None:
         fixture = Application()
-        fixture.session.login(username="admin", password="secret")
     else:
         # check if the existing fixture is corrupted
         if not fixture.is_valid():
             # create a new fixture and perform login
             fixture = Application()
-            fixture.session.login(username="admin", password="secret")
+    fixture.session.ensure_login(username="admin", password="secret")
     return fixture
 
 
 @pytest.fixture(scope="session", autouse=True)
 def stop(request):
     def fin():
-        fixture.session.logout()
+        fixture.session.ensure_logout()
         fixture.destroy()
     request.addfinalizer(fin)
     return fixture
