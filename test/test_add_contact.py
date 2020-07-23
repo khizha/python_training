@@ -10,4 +10,3 @@ def test_add_contact(app):
                                                   birthmonth="January", birthyear="1999", aday="14", amonth="February", ayear="1987", address2="ffffffffffffffffffffffff",
                                                   phone2="5555555", notes="note"))
      app.contact.submit_created_contact()
-     app.session.logout()

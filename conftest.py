@@ -8,6 +8,9 @@ import pytest
 def app(request):
     fixture = Application()
     fixture.session.login(username="admin", password="secret")
-    request.addfinalizer(fixture.destroy)
+    def fin():
+        fixture.session.logout()
+        fixture.destroy()
+    request.addfinalizer(fin)
     return fixture
 

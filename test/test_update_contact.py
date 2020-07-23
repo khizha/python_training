@@ -10,4 +10,3 @@ def test_update_contact(app):
                                                   birthmonth="January", birthyear="1990", aday="24", amonth="February", ayear="1997", address2="ffffffffffffffffffffffff_upd",
                                                   phone2="7777777", notes="note_upd"))
      app.contact.submit_updated_contact()
-     app.session.logout()
