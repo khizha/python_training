@@ -14,7 +14,7 @@ class ContactHelper:
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
         wd.find_element_by_name("firstname").send_keys(contact.firstname)
-        wd.find_element_by_name("theform").click()
+        #wd.find_element_by_name("theform").click()
         wd.find_element_by_name("middlename").click()
         wd.find_element_by_name("middlename").clear()
         wd.find_element_by_name("middlename").send_keys(contact.middlename)
@@ -69,7 +69,7 @@ class ContactHelper:
         wd.find_element_by_name("byear").click()
         wd.find_element_by_name("byear").clear()
         wd.find_element_by_name("byear").send_keys(contact.birthyear)
-        wd.find_element_by_name("theform").click()
+        #wd.find_element_by_name("theform").click()
         wd.find_element_by_name("aday").click()
         Select(wd.find_element_by_name("aday")).select_by_visible_text(contact.aday)
         wd.find_element_by_xpath("(//option[@value=" + contact.aday + "])[2]").click()
@@ -99,6 +99,20 @@ class ContactHelper:
         # accept the contact deletion in the appeared dialog box
         wd.switch_to_alert().accept()
 
+    def open_first_contact_for_modification(self):
+        wd = self.app.wd
+        # select first contact
+        # find first contact in the table by name and click (check) the checkbox
+        wd.find_element_by_name("selected[]").click()
+        # find and click Edit icon to start contact modification
+        wd.find_element_by_xpath("//img[@alt='Edit']").click()
+
+    def submit_updated_contact(self):
+        wd = self.app.wd
+        # find by name and click "Update" button
+        wd.find_element_by_name("update").click()
+        # return to homepage
+        wd.find_element_by_link_text("home page").click()
 
     def open_new_contact_page(self):
         wd = self.app.wd
