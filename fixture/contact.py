@@ -95,9 +95,7 @@ class ContactHelper:
         # find first contact in the table by name and click (check) the checkbox
         wd.find_element_by_name("selected[]").click()
         # deletion
-        #wd.find_element_by_name("delete").click()
         wd.find_element_by_xpath("//input[@value='Delete']").click()
-        #self.return_to_groups_page()
         # accept the contact deletion in the appeared dialog box
         wd.switch_to_alert().accept()
 
