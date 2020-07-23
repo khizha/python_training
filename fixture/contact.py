@@ -91,11 +91,13 @@ class ContactHelper:
 
     def open_first_contact_for_modification(self):
         wd = self.app.wd
-        # select first contact
-        # find first contact in the table by name and click (check) the checkbox
-        wd.find_element_by_name("selected[]").click()
-        # find and click Edit icon to start contact modification
-        wd.find_element_by_xpath("//img[@alt='Edit']").click()
+        # if we are not already on a edit contact page
+        if not ('addressbook/edit.php' in wd.current_url and len(wd.find_elements_by_name("update")) == 2):
+            # select first contact
+            # find first contact in the table by name and click (check) the checkbox
+            wd.find_element_by_name("selected[]").click()
+            # find and click Edit icon to start contact modification
+            wd.find_element_by_xpath("//img[@alt='Edit']").click()
 
     def submit_updated_contact(self):
         wd = self.app.wd
@@ -106,8 +108,10 @@ class ContactHelper:
 
     def open_new_contact_page(self):
         wd = self.app.wd
-        wd.find_element_by_id("header").click()
-        wd.find_element_by_link_text("add new").click()
+        # if we are not already on a new contact page
+        if not (wd.current_url.endswith("addressbook/edit.php") and len(wd.find_elements_by_name("submit")) == 2):
+            wd.find_element_by_id("header").click()
+            wd.find_element_by_link_text("add new").click()
 
     def count(self):
         wd = self.app.wd
