@@ -2,7 +2,6 @@
 from model.contact import Contact
 
 def test_update_contact(app):
-     app.session.login(username="admin", password="secret")
      app.contact.open_first_contact_for_modification()
      app.contact.fill_in_new_contact_data(Contact(firstname="fff_upd", middlename="mmm_upd", lastname="lll_upd", nickname="kkk_upd", title="ttt_upd",
                                                   company="ccc_upd", address="aaa_upd", homeaddress="hhh_upd", mobilephone="7777777",
