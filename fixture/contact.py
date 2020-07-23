@@ -89,6 +89,19 @@ class ContactHelper:
         wd.find_element_by_name("notes").clear()
         wd.find_element_by_name("notes").send_keys(contact.notes)
 
+    def delete_first_contact(self):
+        wd = self.app.wd
+        # select first contact
+        # find first contact in the table by name and click (check) the checkbox
+        wd.find_element_by_name("selected[]").click()
+        # deletion
+        #wd.find_element_by_name("delete").click()
+        wd.find_element_by_xpath("//input[@value='Delete']").click()
+        #self.return_to_groups_page()
+        # accept the contact deletion in the appeared dialog box
+        wd.switch_to_alert().accept()
+
+
     def open_new_contact_page(self):
         wd = self.app.wd
         wd.find_element_by_id("header").click()
