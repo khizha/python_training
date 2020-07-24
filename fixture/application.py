@@ -23,7 +23,9 @@ class Application:
 
     def open_home_page(self):
         wd = self.wd
-        wd.get("http://localhost/addressbook/")
+        # check if we are not already on the home page
+        if not (wd.current_url.endswith("localhost/addressbook/") and len(wd.find_elements_by_xpath("//input[@value='Send e-Mail']")) > 0):
+            wd.get("http://localhost/addressbook/")
 
     def destroy(self):
         self.wd.quit()
