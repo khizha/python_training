@@ -2,8 +2,6 @@
 from model.contact import Contact
 
 def test_update_contact(app):
-    # open contacts, i.e. home page
-    app.open_home_page()
     if app.contact.count() != 0:
          app.contact.open_first_contact_for_modification()
          app.contact.fill_in_new_contact_data(Contact(firstname="fff_upd", middlename="mmm_upd", lastname="lll_upd", nickname="kkk_upd", title="ttt_upd",
