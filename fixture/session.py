@@ -18,4 +18,4 @@ class SessionHelper:
         wd = self.app.wd
         wd.find_element_by_link_text("Logout").click()
         wd.find_element_by_name("user")
-        wd.implicitly_wait(3)
+        wd.implicitly_wait(4)
