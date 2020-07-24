@@ -81,6 +81,8 @@ class ContactHelper:
 
     def delete_first_contact(self):
         wd = self.app.wd
+        # open contacts, i.e. home page
+        self.app.open_home_page()
         # select first contact
         # find first contact in the table by name and click (check) the checkbox
         wd.find_element_by_name("selected[]").click()
