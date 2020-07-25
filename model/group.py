@@ -5,3 +5,11 @@ class Group:
         self.header=header
         self.footer=footer
         self.id=id
+
+    def __repr(self):
+        # representation of the object in Console
+        return "%s:%s" % (self.id, self.name)
+
+    def __eq__(self, other):
+        # comparison of two objects
+        return self.id == other.id and self.name == other.name
