@@ -1,4 +1,5 @@
 from selenium.webdriver.support.ui import Select
+from model.contact import Contact
 
 class ContactHelper:
 
@@ -118,3 +119,33 @@ class ContactHelper:
         # open contacts, i.e. home page
         self.app.open_home_page()
         return len(wd.find_elements_by_name("selected[]"))
+
+    def get_contacts_list(self):
+        wd = self.app.wd
+        self.app.open_home_page()
+        contacts = []
+        table = wd.find_element_by_xpath("//table[@class='sortcompletecallback-applyZebra']")
+        # table rows scanning
+        j = 0
+        for row in table.find_elements_by_xpath(".//tr"):
+            row_contents = []
+            i = 0
+            j = j + 1
+            k = 1
+            for element in wd.find_elements_by_xpath('//input[@name="selected[]"]'):
+                k = k + 1
+                if (j == k ):
+                    row_contents.append(element.get_attribute("value"))
+
+            for element in row.find_elements_by_xpath(".//td"):
+                i = i + 1
+                if ((i>1) and (i < 4)):
+                    row_contents.append(element.text)
+
+            for row_element in row_contents:
+                extracted_contact = Contact(firstname=row_contents[2],
+                                        lastname=row_contents[1],
+                                        id=row_contents[0])
+                contacts.append(extracted_contact)
+
+        return contacts
