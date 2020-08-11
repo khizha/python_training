@@ -132,20 +132,24 @@ class ContactHelper:
             i = 0
             j = j + 1
             k = 1
+            #print("tr: " + str(j))
             for element in wd.find_elements_by_xpath('//input[@name="selected[]"]'):
                 k = k + 1
                 if (j == k ):
                     row_contents.append(element.get_attribute("value"))
+                    #print("selected: " + element.get_attribute("value") + " k:" + str(k-1))
 
             for element in row.find_elements_by_xpath(".//td"):
                 i = i + 1
                 if ((i>1) and (i < 4)):
                     row_contents.append(element.text)
+                    #print("adding a line: " + element.text)
 
-            for row_element in row_contents:
+            if len(row_contents) != 0:
                 extracted_contact = Contact(firstname=row_contents[2],
                                         lastname=row_contents[1],
                                         id=row_contents[0])
                 contacts.append(extracted_contact)
+                #print("row_element: " + row_element)
 
         return contacts
