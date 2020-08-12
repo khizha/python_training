@@ -9,6 +9,7 @@ class ContactHelper:
     def submit_created_contact(self):
         wd = self.app.wd
         wd.find_element_by_xpath("(//input[@name='submit'])[2]").click()
+        self.contact_cache = None
 
     def fill_in_new_contact_data(self, contact):
         wd = self.app.wd
@@ -89,6 +90,7 @@ class ContactHelper:
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         # accept the contact deletion in the appeared dialog box
         wd.switch_to_alert().accept()
+        self.contact_cache = None
 
     def open_first_contact_for_modification(self):
         wd = self.app.wd
@@ -106,6 +108,7 @@ class ContactHelper:
         wd.find_element_by_name("update").click()
         # return to homepage
         wd.find_element_by_link_text("home page").click()
+        self.contact_cache = None
 
     def open_new_contact_page(self):
         wd = self.app.wd
@@ -120,36 +123,40 @@ class ContactHelper:
         self.app.open_home_page()
         return len(wd.find_elements_by_name("selected[]"))
 
+    contact_cache = None
+
     def get_contacts_list(self):
-        wd = self.app.wd
-        self.app.open_home_page()
-        contacts = []
-        table = wd.find_element_by_xpath("//table[@class='sortcompletecallback-applyZebra']")
-        # table rows scanning
-        j = 0
-        for row in table.find_elements_by_xpath(".//tr"):
-            row_contents = []
-            i = 0
-            j = j + 1
-            k = 1
-            #print("tr: " + str(j))
-            for element in wd.find_elements_by_xpath('//input[@name="selected[]"]'):
-                k = k + 1
-                if (j == k ):
-                    row_contents.append(element.get_attribute("value"))
-                    #print("selected: " + element.get_attribute("value") + " k:" + str(k-1))
+        # check if contacts cache is empty
+        if self.contact_cache is None:
+            wd = self.app.wd
+            self.app.open_home_page()
+            self.contact_cache = []
+            table = wd.find_element_by_xpath("//table[@class='sortcompletecallback-applyZebra']")
+            # table rows scanning
+            j = 0
+            for row in table.find_elements_by_xpath(".//tr"):
+                row_contents = []
+                i = 0
+                j = j + 1
+                k = 1
+                #print("tr: " + str(j))
+                for element in wd.find_elements_by_xpath('//input[@name="selected[]"]'):
+                    k = k + 1
+                    if (j == k ):
+                        row_contents.append(element.get_attribute("value"))
+                        #print("selected: " + element.get_attribute("value") + " k:" + str(k-1))
 
-            for element in row.find_elements_by_xpath(".//td"):
-                i = i + 1
-                if ((i>1) and (i < 4)):
-                    row_contents.append(element.text)
-                    #print("adding a line: " + element.text)
+                for element in row.find_elements_by_xpath(".//td"):
+                    i = i + 1
+                    if ((i>1) and (i < 4)):
+                        row_contents.append(element.text)
+                        #print("adding a line: " + element.text)
 
-            if len(row_contents) != 0:
-                extracted_contact = Contact(firstname=row_contents[2],
-                                        lastname=row_contents[1],
-                                        id=row_contents[0])
-                contacts.append(extracted_contact)
-                #print("row_element: " + row_element)
+                if len(row_contents) != 0:
+                    extracted_contact = Contact(firstname=row_contents[2],
+                                            lastname=row_contents[1],
+                                            id=row_contents[0])
+                    self.contact_cache.append(extracted_contact)
+                    #print("row_element: " + row_element)
 
-        return contacts
+        return list(self.contact_cache)

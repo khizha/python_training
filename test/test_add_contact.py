@@ -13,10 +13,9 @@ def test_add_contact(app):
                                                   phone2="5555555", notes="note")
      app.contact.fill_in_new_contact_data(new_contact)
      app.contact.submit_created_contact()
-
-     new_contacts = app.contact.get_contacts_list()
      # check that the new contacts list is 1 element longer than the old list
-     assert len(old_contacts) + 1 == len(new_contacts)
+     assert len(old_contacts) + 1 == app.contact.count()
+     new_contacts = app.contact.get_contacts_list()
 
      max_ = new_contacts[0].id
      for i in new_contacts:
