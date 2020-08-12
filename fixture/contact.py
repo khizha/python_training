@@ -82,10 +82,13 @@ class ContactHelper:
         wd.find_element_by_name("notes").send_keys(contact.notes)
 
     def delete_first_contact(self):
+        self.delete_contact_by_index(0)
+
+    def delete_contact_by_index(self, index):
         wd = self.app.wd
         # select first contact
         # find first contact in the table by name and click (check) the checkbox
-        wd.find_element_by_name("selected[]").click()
+        wd.find_elements_by_name("selected[]")[index].click()
         # deletion
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         # accept the contact deletion in the appeared dialog box

@@ -55,7 +55,7 @@ class GroupHelper:
 
     def select_group_by_index(self, index):
         wd = self.app.wd
-        # select the first group in the list
+        # select the target (index) group in the list
         wd.find_elements_by_name("selected[]")[index].click()
 
     def modify_first_group(self, new_group_data):
