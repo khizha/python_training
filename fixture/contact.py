@@ -96,14 +96,17 @@ class ContactHelper:
         self.contact_cache = None
 
     def open_first_contact_for_modification(self):
+        self.open_contact_for_modification_by_index(0)
+
+    def open_contact_for_modification_by_index(self, index):
         wd = self.app.wd
         # if we are not already on a edit contact page
         if not ('addressbook/edit.php' in wd.current_url and len(wd.find_elements_by_name("update")) == 2):
-            # select first contact
-            # find first contact in the table by name and click (check) the checkbox
-            wd.find_element_by_name("selected[]").click()
+            # select the index contact
+            # find index contact in the table by name and click (check) the checkbox
+            wd.find_elements_by_name("selected[]")[index].click()
             # find and click Edit icon to start contact modification
-            wd.find_element_by_xpath("//img[@alt='Edit']").click()
+            wd.find_elements_by_xpath("//img[@alt='Edit']")[index].click()
 
     def submit_updated_contact(self):
         wd = self.app.wd
