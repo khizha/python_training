@@ -8,7 +8,7 @@ class Group:
         self.footer=footer
         self.id=id
 
-    def __repr(self):
+    def __repr__(self):
         # representation of the object in Console
         return "%s:%s" % (self.id, self.name)
 
