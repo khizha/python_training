@@ -40,7 +40,7 @@ class ContactHelper:
         wd.find_element_by_name("address").send_keys(contact.address)
         wd.find_element_by_name("home").click()
         wd.find_element_by_name("home").clear()
-        wd.find_element_by_name("home").send_keys(contact.homeaddress)
+        wd.find_element_by_name("home").send_keys(contact.homephone)
         wd.find_element_by_name("mobile").click()
         wd.find_element_by_name("mobile").clear()
         wd.find_element_by_name("mobile").send_keys(contact.mobilephone)
@@ -143,10 +143,30 @@ class ContactHelper:
                 # get the list of cells in the current table row
                 row_contents = contacts_table_row.find_elements_by_tag_name("td")
 
+                all_phones = row_contents[5].text.splitlines()
+                print("")
+                print(row_contents[5].text)
+                print("")
                 extracted_contact = Contact(firstname=row_contents[2].text,
                                             lastname=row_contents[1].text,
-                                            id=row_contents[0].find_element_by_name("selected[]").get_attribute("value"))
-
+                                            id=row_contents[0].find_element_by_name("selected[]").get_attribute("value"),
+                                            homephone=all_phones[0],
+                                            mobilephone=all_phones[1],
+                                            workphone=all_phones[2],
+                                            phone2=all_phones[3])
                 self.contact_cache.append(extracted_contact)
 
         return list(self.contact_cache)
+
+    def get_contact_info_from_edit_page(self, index):
+        wd = self.app.wd
+        self.open_contact_for_modification_by_index(index)
+        firstname = wd.find_element_by_name("firstname").get_attribute("value")
+        lastname = wd.find_element_by_name("lastname").get_attribute("value")
+        id = wd.find_element_by_name("id").get_attribute("value")
+        homephone = wd.find_element_by_name("home").get_attribute("value")
+        workphone = wd.find_element_by_name("work").get_attribute("value")
+        mobilephone = wd.find_element_by_name("mobile").get_attribute("value")
+        phone2 = wd.find_element_by_name("phone2").get_attribute("value")
+        return Contact(firstname=firstname, lastname=lastname, id=id,
+                       homephone=homephone, workphone=workphone, mobilephone=mobilephone, phone2=phone2)

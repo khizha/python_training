@@ -8,11 +8,11 @@ def test_update_contact(app):
          index = randrange(len(old_contacts))
 
          updated_contact = Contact(firstname="Name Updated", middlename="mmm_upd", lastname="Lastname Updated", nickname="kkk_upd", title="ttt_upd",
-                                                      company="ccc_upd", address="aaa_upd", homeaddress="hhh_upd", mobilephone="7777777",
-                                                      workphone="7777777", fax="7777777", email="f_upd@tt.tt",
-                                                      email2="f2_upd@tt.tt", email3="f3_upd@tt.tt", homepage="http://home_upd.tt", birthday="22",
-                                                      birthmonth="January", birthyear="1990", address2="ffffffffffffffffffffffff_upd",
-                                                      phone2="7777777", notes="note_upd")
+                                   company="ccc_upd", address="aaa_upd", homephone="hhh_upd", mobilephone="7777777",
+                                   workphone="7777777", fax="7777777", email="f_upd@tt.tt",
+                                   email2="f2_upd@tt.tt", email3="f3_upd@tt.tt", homepage="http://home_upd.tt", birthday="22",
+                                   birthmonth="January", birthyear="1990", address2="ffffffffffffffffffffffff_upd",
+                                   phone2="7777777", notes="note_upd")
 
          updated_contact.id = old_contacts[index].id
          app.contact.open_contact_for_modification_by_index(index)
