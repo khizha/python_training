@@ -1,5 +1,6 @@
 from selenium.webdriver.support.ui import Select
 from model.contact import Contact
+import re
 
 class ContactHelper:
 
@@ -168,5 +169,29 @@ class ContactHelper:
         workphone = wd.find_element_by_name("work").get_attribute("value")
         mobilephone = wd.find_element_by_name("mobile").get_attribute("value")
         phone2 = wd.find_element_by_name("phone2").get_attribute("value")
+        # return to homepage
+        wd.find_element_by_link_text("home").click()
         return Contact(firstname=firstname, lastname=lastname, id=id,
                        homephone=homephone, workphone=workphone, mobilephone=mobilephone, phone2=phone2)
+
+    def get_contacts_from_view_page(self, index):
+        wd = self.app.wd
+        self.open_contact_view_by_index(index)
+        # get full text from the contact page
+        text = wd.find_element_by_id("content").text
+        # get phones from the full text
+        homephone = re.search("H: (.*)", text).group(1)
+        workphone = re.search("W: (.*)", text).group(1)
+        mobilephone = re.search("M: (.*)", text).group(1)
+        phone2 = re.search("P: (.*)", text).group(1)
+        # return to homepage
+        wd.find_element_by_link_text("home").click()
+        return Contact(homephone=homephone, workphone=workphone, mobilephone=mobilephone, phone2=phone2)
+
+    def open_contact_view_by_index(self, index):
+        wd = self.app.wd
+        # select the index contact
+        # find index contact in the table by name and click (check) the checkbox
+        wd.find_elements_by_name("selected[]")[index].click()
+        # find and click Edit icon to start contact modification
+        wd.find_elements_by_xpath("//img[@alt='Details']")[index].click()
