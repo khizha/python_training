@@ -34,12 +34,6 @@ def test_names_on_homepage(app, index):
     contact_from_edit_page = app.contact.get_contact_info_from_edit_page(index)
     assert contact_from_homepage.all_phones_from_homepage == merge_phones_like_on_homepage(contact_from_edit_page)
 
-#def test_phones_on_homepage(app, index):
-#    # compare the phone for the contact defined by index in the contacts list on the homepage with the one from the contact edit page
-#    contact_from_homepage = app.contact.get_contacts_list()[index]
-#    contact_from_edit_page = app.contact.get_contact_info_from_edit_page(index)
-#    assert contact_from_homepage.all_phones_from_homepage == merge_phones_like_on_homepage(contact_from_edit_page)
-
 def clear(s):
     # remove the following symbols from the s string: "()", " ", "-"
     return re.sub("[() -]", "", s)
