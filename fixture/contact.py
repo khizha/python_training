@@ -144,17 +144,15 @@ class ContactHelper:
                 # get the list of cells in the current table row
                 row_contents = contacts_table_row.find_elements_by_tag_name("td")
 
-                all_phones = row_contents[5].text.splitlines()
+                # read thee phones, but do not split them
+                all_phones = row_contents[5].text
                 print("")
                 print(row_contents[5].text)
                 print("")
                 extracted_contact = Contact(firstname=row_contents[2].text,
                                             lastname=row_contents[1].text,
                                             id=row_contents[0].find_element_by_name("selected[]").get_attribute("value"),
-                                            homephone=all_phones[0],
-                                            mobilephone=all_phones[1],
-                                            workphone=all_phones[2],
-                                            phone2=all_phones[3])
+                                            all_phones_from_homepage=all_phones)
                 self.contact_cache.append(extracted_contact)
 
         return list(self.contact_cache)
