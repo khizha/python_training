@@ -35,7 +35,7 @@ class Contact:
 
     def __repr__(self):
         # representation of the object in Console
-        return "id: %s FN: %s LN: %s" % (self.id, self.firstname, self.lastname)
+        return "id: %s FN: %s LN: %s ADDR: %s HOMEPH: %s MOBPH: %s WPH: %s PH2: %s EMAIL: %s EMAIL2: %s EMAIL3: %s" % (self.id, self.firstname, self.lastname, self.address, self.homephone, self.mobilephone, self.workphone, self.phone2, self.email, self.email2, self.email3)
 
     def __eq__(self, other):
         # comparison of two objects
