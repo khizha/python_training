@@ -14,7 +14,8 @@ def app(request):
 
     # check if fixture does not exist
     if fixture is None:
-        fixture = Application()
+        browser = request.config.getoption("--browser")
+        fixture = Application(browser=browser)
     else:
         # check if the existing fixture is corrupted
         if not fixture.is_valid():
@@ -31,4 +32,7 @@ def stop(request):
         fixture.destroy()
     request.addfinalizer(fin)
     return fixture
+
+def pytest_addoption(parser):
+    parser.addoption("--browser", action="store", default="firefox")
 
