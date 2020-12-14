@@ -2,6 +2,7 @@
 from fixture.application import Application
 import pytest
 import json
+import os.path
 
 # global variable containing fixture
 fixture = None
@@ -20,7 +21,10 @@ def app(request):
     browser = request.config.getoption("--browser")
 
     if target is None:
-        with open(request.config.getoption("--target")) as config_file:
+        # get path to the configuration file
+        config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), request.config.getoption("--target"))
+
+        with open(config_file) as config_file:
             target = json.load(config_file)
 
     # check if fixture does not exist or is corrupted/invalid
