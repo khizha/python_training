@@ -22,7 +22,12 @@ def app(request):
 
     if target is None:
         # get path to the configuration file
-        config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), request.config.getoption("--target"))
+        if request.config.getoption("--targetpath") is None:
+            # if the path to the configuration file is not provided in the command line then it is located in the current directory
+            config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), request.config.getoption("--target"))
+        else:
+            # if the path to the configuration file is provided
+            config_file = os.path.join(request.config.getoption("--targetpath"), request.config.getoption("--target"))
 
         with open(config_file) as f:
             target = json.load(f)
@@ -45,3 +50,4 @@ def stop(request):
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="firefox")
     parser.addoption("--target", action="store", default="target.json")
+    parser.addoption("--targetpath", action="store", default=None)
