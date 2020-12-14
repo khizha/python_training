@@ -1,9 +1,13 @@
 
 from fixture.application import Application
 import pytest
+import json
 
 # global variable containing fixture
 fixture = None
+
+# global variable containing configuration file data
+target = None
 
 @pytest.fixture()
 #@pytest.fixture(scope = "session")
@@ -11,18 +15,18 @@ fixture = None
 def app(request):
     # use the global variable "fixture"
     global fixture
-    browser = request.config.getoption("--browser")
-    base_url = request.config.getoption("--baseUrl")
+    global target
 
-    # check if fixture does not exist
-    if fixture is None:
-        fixture = Application(browser=browser, base_url=base_url)
-    else:
-        # check if the existing fixture is corrupted
-        if not fixture.is_valid():
-            # create a new fixture and perform login
-            fixture = Application(browser=browser, base_url=base_url)
-    fixture.session.ensure_login(username="admin", password="secret")
+    browser = request.config.getoption("--browser")
+
+    if target is None:
+        with open(request.config.getoption("--target")) as config_file:
+            target = json.load(config_file)
+
+    # check if fixture does not exist or is corrupted/invalid
+    if fixture is None or not fixture.is_valid():
+        fixture = Application(browser=browser, base_url=target['baseUrl'])
+    fixture.session.ensure_login(username=target['username'], password=target['password'])
     return fixture
 
 
@@ -36,4 +40,4 @@ def stop(request):
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="firefox")
-    parser.addoption("--baseUrl", action="store", default="http://localhost/addressbook/")
+    parser.addoption("--target", action="store", default="target.json")
