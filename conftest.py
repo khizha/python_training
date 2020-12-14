@@ -24,8 +24,8 @@ def app(request):
         # get path to the configuration file
         config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), request.config.getoption("--target"))
 
-        with open(config_file) as config_file:
-            target = json.load(config_file)
+        with open(config_file) as f:
+            target = json.load(f)
 
     # check if fixture does not exist or is corrupted/invalid
     if fixture is None or not fixture.is_valid():
