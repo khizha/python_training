@@ -7,7 +7,8 @@ class DbFixture:
         self.name = name
         self.user = user
         self.password = password
-        self.connection = pymysql.connect(host=host, database=name, user=user, password=password)
+        # autocommit=True parameter cleans up database cache after each db request
+        self.connection = pymysql.connect(host=host, database=name, user=user, password=password, autocommit=True)
 
     def destroy(self):
         self.connection.close()
