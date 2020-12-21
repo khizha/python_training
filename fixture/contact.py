@@ -1,6 +1,7 @@
 from selenium.webdriver.support.ui import Select
 from model.contact import Contact
 import re
+import time
 
 class ContactHelper:
 
@@ -233,3 +234,21 @@ class ContactHelper:
         # accept the contact deletion in the appeared dialog box
         wd.switch_to_alert().accept()
         self.contact_cache = None
+
+    def add_contact_to_group(self, contact_id, contact_ui_index, group_name, group_id):
+        wd = self.app.wd
+        # select the contact
+        self.select_contact_by_id(contact_id)
+
+        #expand the list of available groups by clicking the drop-down list arrow
+        wd.find_element_by_name("to_group").click()
+
+        # select the group by name
+        Select(wd.find_element_by_name("to_group")).select_by_visible_text(group_name)
+
+        # click the group name
+        wd.find_element_by_xpath("(//option[@value='%s'])[2]" % group_id).click()
+
+        #time.sleep(10)
+        # click Add button to add the contact to the group
+        wd.find_element_by_name("add").click()
