@@ -109,6 +109,16 @@ class ContactHelper:
             # find and click Edit icon to start contact modification
             wd.find_elements_by_xpath("//img[@alt='Edit']")[index].click()
 
+    def open_contact_for_modification_by_id(self, id, index):
+        wd = self.app.wd
+        # if we are not already on a edit contact page
+        if not ('addressbook/edit.php' in wd.current_url and len(wd.find_elements_by_name("update")) == 2):
+            # select the index contact
+            # find contact by id in the table and click (check) the checkbox
+            self.select_contact_by_id(id)
+            # find and click Edit icon to start contact modification
+            wd.find_elements_by_xpath("//img[@alt='Edit']")[index].click()
+
     def submit_updated_contact(self):
         wd = self.app.wd
         # find by name and click "Update" button
