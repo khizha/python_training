@@ -1,18 +1,26 @@
 # -*- coding: utf-8 -*-
-import time
-from random import randrange
+import random
+from model.contact import Contact
 
-def test_delete_first_contact(app):
+def test_delete_first_contact(app, db, check_ui):
     # if contacts list is empty
     if app.contact.count() != 0:
-        old_contacts = app.contact.get_contacts_list()
+        old_contacts = db.get_contact_list()
 
-        index = randrange(len(old_contacts))
-        app.contact.delete_contact_by_index(index)
+        # get a random contact from the contacts list
+        target_contact = random.choice(old_contacts)
 
-        time.sleep(3)
+        # delete the selected contact by id
+        app.contact.delete_contact_by_id(target_contact.id)
+
+        #time.sleep(3)
         assert len(old_contacts) - 1 == app.contact.count()
-        new_contacts = app.contact.get_contacts_list()
-        # remove first element from the old list of contacts
-        old_contacts[index:index + 1] = []
+
+        new_contacts = db.get_contact_list()
+
+        # remove contacts list element that is equal to the given parameter
+        old_contacts.remove(target_contact)
         assert old_contacts == new_contacts
+
+    if check_ui:
+        assert sorted(new_contacts, key=Contact.id_or_max) == sorted(app.contact.get_contacts_list(), key=Contact.id_or_max)

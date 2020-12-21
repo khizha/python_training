@@ -208,3 +208,18 @@ class ContactHelper:
         wd.find_elements_by_name("selected[]")[index].click()
         # find and click Edit icon to start contact modification
         wd.find_elements_by_xpath("//img[@alt='Details']")[index].click()
+
+    def select_contact_by_id(self, id):
+        wd = self.app.wd
+        # select the target (id) contact in the list
+        wd.find_element_by_css_selector("input[value='%s']" % id).click()
+
+    def delete_contact_by_id(self, id):
+        wd = self.app.wd
+        #self.open_home_page()
+        # select the contact
+        self.select_contact_by_id(id)
+        wd.find_element_by_xpath("//input[@value='Delete']").click()
+        # accept the contact deletion in the appeared dialog box
+        wd.switch_to_alert().accept()
+        self.contact_cache = None
