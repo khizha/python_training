@@ -237,6 +237,12 @@ class ContactHelper:
 
     def add_contact_to_group(self, contact_id, group_name, group_id):
         wd = self.app.wd
+
+        #if we are not already on the contacts page, return there
+        # return to homepage
+        self.app.open_home_page()
+        #wd.find_element_by_link_text("home").click()
+
         # select the contact
         self.select_contact_by_id(contact_id)
 
@@ -248,3 +254,6 @@ class ContactHelper:
 
         # click the group name
         wd.find_element_by_xpath("(//option[@value='%s'])[2]" % group_id).click()
+
+        # click Add button to add the contact to the group
+        wd.find_element_by_name("add").click()

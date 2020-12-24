@@ -24,11 +24,16 @@ def test_add_contact_into_group(app, db):
     # get the old list of groups from the DB
     groups_list = db.get_group_list()
     db2 = ORMFixture(host="127.0.0.1", name="addressbook", user="root", password="")
+
+    contacts_2_add = []
+
     for gr in groups_list:
         contacts_2_add = db2.get_contacts_not_in_group(gr)
         if len(contacts_2_add)>0:
             # add random contact from contacts_2_add list into gr group
-            add_rand_contact_to_group(app, contacts_2_add, gr)
+            random_contact = random.choice(contacts_2_add)
+            #add_rand_contact_to_group(app, contacts_2_add, gr)
+            app.contact.add_contact_to_group(random_contact.id, gr.name, gr.id)
             break
 
     if len(contacts_2_add) == 0:
@@ -40,13 +45,18 @@ def test_add_contact_into_group(app, db):
         gr = sorted(new_groups, key=Group.id_or_max)[-1]
 
         # add random contact from contacts_list list into gr group
-        add_rand_contact_to_group(app, contacts_list, gr)
 
-def add_rand_contact_to_group(app, cont_list, target_group):
-    random_contact = random.choice(cont_list)
+        random_contact = random.choice(contacts_list)
+        # add_rand_contact_to_group(app, contacts_2_add, gr)
+        app.contact.add_contact_to_group(random_contact.id, gr.name, gr.id)
+
+        #add_rand_contact_to_group(app, contacts_list, gr)
+
+#def add_rand_contact_to_group(app, cont_list, target_group):
+ #   random_contact = random.choice(cont_list)
     # the selected contact ID is target_contact.id
     # get the selected contact index in the homepage
-    ui_contacts_list = app.contact.get_contacts_list()
-    target_contact_ui_index = ui_contacts_list.index(random_contact)
+    #ui_contacts_list = app.contact.get_contacts_list()
+    #target_contact_ui_index = ui_contacts_list.index(random_contact)
     # add the selected contact to the selected group
-    app.contact.add_contact_to_group(random_contact.id, target_group.name, target_group.id)
+  #  app.contact.add_contact_to_group(random_contact.id, target_group.name, target_group.id)
