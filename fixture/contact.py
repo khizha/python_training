@@ -235,7 +235,7 @@ class ContactHelper:
         wd.switch_to_alert().accept()
         self.contact_cache = None
 
-    def add_contact_to_group(self, contact_id, contact_ui_index, group_name, group_id):
+    def add_contact_to_group(self, contact_id, group_name, group_id):
         wd = self.app.wd
         # select the contact
         self.select_contact_by_id(contact_id)
@@ -248,7 +248,3 @@ class ContactHelper:
 
         # click the group name
         wd.find_element_by_xpath("(//option[@value='%s'])[2]" % group_id).click()
-
-        #time.sleep(10)
-        # click Add button to add the contact to the group
-        wd.find_element_by_name("add").click()

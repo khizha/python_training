@@ -49,4 +49,4 @@ def add_rand_contact_to_group(app, cont_list, target_group):
     ui_contacts_list = app.contact.get_contacts_list()
     target_contact_ui_index = ui_contacts_list.index(random_contact)
     # add the selected contact to the selected group
-    app.contact.add_contact_to_group(random_contact.id, target_contact_ui_index, target_group.name, target_group.id)
+    app.contact.add_contact_to_group(random_contact.id, target_group.name, target_group.id)
