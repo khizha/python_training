@@ -239,9 +239,7 @@ class ContactHelper:
         wd = self.app.wd
 
         #if we are not already on the contacts page, return there
-        # return to homepage
         self.app.open_home_page()
-        #wd.find_element_by_link_text("home").click()
 
         # select the contact
         self.select_contact_by_id(contact_id)
@@ -257,3 +255,21 @@ class ContactHelper:
 
         # click Add button to add the contact to the group
         wd.find_element_by_name("add").click()
+
+    def delete_contact_from_group(self, contact_id, group_name, group_id):
+
+        wd = self.app.wd
+
+        # if we are not already on the contacts page, return there
+        self.app.open_home_page()
+
+        # open the "groups" drop-down list and get all the groups from there
+        wd.find_elements_by_xpath("//select[@name='group']/option")
+
+        # select the chosen group from the drop-down list and click it
+        Select(wd.find_element_by_name("group")).select_by_visible_text(group_name)
+        wd.find_element_by_xpath("//option[@value='%s']" % group_id).click()
+
+        # click the selected contact and remove it by clicking the Remove button
+        wd.find_element_by_id(contact_id).click()
+        wd.find_element_by_name("remove").click()

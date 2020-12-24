@@ -1,29 +1,38 @@
 from model.contact import Contact
 from model.group import Group
-from model.relations import Relations
+import random
+from fixture.orm import ORMFixture
 
 # remove a random contact from a random group from the groups with contacts list via UI
 def test_delete_contact_from_group(app, db):
-    # check if any group<->contact relations exist in DB
-    if (len(db.get_group_contact_relations_list()) !=0):
+    # if the groups list is empty
+    if app.group.count() == 0:
+        app.group.create(Group(name="TestGroup"))
 
-        removed_relation = Relations()
+    # if the contacts list is empty
+    if app.contact.count() == 0:
+        contact = Contact(firstname="nnnn", lastname="mmmm", address="", homephone="", mobilephone="", workphone="", email="", email2="", email3="", phone2="")
 
-        # remove random contact from a random group in UI
-        removed_relation = app.group.remove_random_contact_from_random_group()
+    # get the old list of contacts from the DB
+    contacts_list = db.get_contact_list()
 
-        # check if the relation is not empty, i.e. some random contact was removed from a random group
-        if removed_relation.cid is not None and removed_relation.gid is not None:
+    # get the old list of groups from the DB
+    groups_list = db.get_group_list()
+    db2 = ORMFixture(host="127.0.0.1", name="addressbook", user="root", password="")
+    for gr in groups_list:
+        contacts_2_delete = db2.get_contacts_in_group(gr)
+        if len(contacts_2_delete)>0:
+            # delete random contact from contacts_2_delete list from gr group
+            random_contact = random.choice(contacts_2_delete)
+            app.contact.delete_contact_from_group(random_contact.id, gr.name, gr.id)
+            break
 
-            # check that the removed contact<->group relation does not exist in the DB
-            relations_list = db.get_group_contact_relations_list()
-            assert removed_relation not in relations_list
-        else:
-            print("")
-            print("------------ NOTHING REMOVED -----------------")
+    #if contacts_2_delete is null then add contact to group and delete the contact from the group;
+    if len(contacts_2_delete) == 0:
+        # i.e. there are no groups with added contacts
+        # add a random contact from the available contacts into the current group gr
+        random_contact = random.choice(contacts_list)
+        app.contact.add_contact_to_group(random_contact.id, gr.name, gr.id)
 
-
-    else:
-        print("")
-        print("------------ RELATIONS TABLE EMPTY -----------------")
-
+        # and now delete the added contact from the group
+        app.contact.delete_contact_from_group(random_contact.id, gr.name, gr.id)
