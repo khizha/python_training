@@ -120,7 +120,7 @@ class GroupHelper:
 
     def open_groups_page(self):
         wd = self.app.wd
-        # if the current page address ends with "\group.php" and there is a button with name "new" on this page then
+        # if the current page address ends with "\group.php" and there is a button with name "Create New Project" on this page then
         # this is a correct page
         if not (wd.current_url.endswith("/group.php") and len(wd.find_elements_by_name("new")) > 0):
             wd.find_element_by_link_text("groups").click()
@@ -145,48 +145,3 @@ class GroupHelper:
                 self.group_cache.append(Group(name=text, id=id))
         return list(self.group_cache)
 
-    def remove_random_contact_from_random_group(self):
-    # from the homepage get the list of groups that contain contacts
-        groups_list = []
-        contact_ids_list = []
-        removed_relation = Relations()
-
-        wd = self.app.wd
-        # go to the homepage
-        self.app.open_home_page()
-
-        # open the "groups" drop-down list and get all the groups from there
-        dropdown_elements = wd.find_elements_by_xpath("//select[@name='group']/option")
-        for element in dropdown_elements:
-            if element.text != "[all]" and element.text != "[none]":
-                groups_list.append(Group(name=element.text, id=element.get_attribute("value")))
-
-        # if the list is not empty
-        if (len(groups_list)!= 0):
-            # get a random group from the list above
-            selected_group = random.choice(groups_list)
-
-            # select the chosen group from the drop-down list and click it
-            Select(wd.find_element_by_name("group")).select_by_visible_text(selected_group.name)
-            wd.find_element_by_xpath("//option[@value='%s']" % selected_group.id).click()
-
-            # get all the contact names from the opened list
-            for contacts_table_row in wd.find_elements_by_name("entry"):
-                # get the list of cells in the current table row
-                row_contents = contacts_table_row.find_elements_by_tag_name("td")
-                # get the contact id:
-                # id = row_contents[0].find_element_by_name("selected[]").get_attribute("value")
-                contact_ids_list.append(row_contents[0].find_element_by_name("selected[]").get_attribute("value"))
-
-            # if the list of contact ids is not empty
-            if (len(contact_ids_list) != 0):
-                # get a random contact if from the list above
-                selected_contact_id = random.choice(contact_ids_list)
-
-                # click the selected group and remove it by clicking the Remove button
-                wd.find_element_by_id(selected_contact_id).click()
-                wd.find_element_by_name("remove").click()
-
-                removed_relation = Relations(cid=selected_contact_id, gid=selected_group.id)
-
-        return removed_relation
