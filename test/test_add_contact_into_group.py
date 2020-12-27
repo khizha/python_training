@@ -27,13 +27,18 @@ def test_add_contact_into_group(app, db):
 
     contacts_2_add = []
 
+    # before the contact is added: number of contacts in the group where the new contact will be added
+    old_contacts_in_group_list = []
+
     for gr in groups_list:
+        old_contacts_in_group_list = db.get_contacts_for_current_group(gr.id)
         contacts_2_add = db2.get_contacts_not_in_group(gr)
-        if len(contacts_2_add)>0:
+        if len(contacts_2_add) > 0:
             # add random contact from contacts_2_add list into gr group
             random_contact = random.choice(contacts_2_add)
             #add_rand_contact_to_group(app, contacts_2_add, gr)
             app.contact.add_contact_to_group(random_contact.id, gr.name, gr.id)
+            #new_contacts_in_group_list = db.get_contacts_for_current_group(gr.id)
             break
 
     if len(contacts_2_add) == 0:
@@ -52,11 +57,10 @@ def test_add_contact_into_group(app, db):
 
         #add_rand_contact_to_group(app, contacts_list, gr)
 
-#def add_rand_contact_to_group(app, cont_list, target_group):
- #   random_contact = random.choice(cont_list)
-    # the selected contact ID is target_contact.id
-    # get the selected contact index in the homepage
-    #ui_contacts_list = app.contact.get_contacts_list()
-    #target_contact_ui_index = ui_contacts_list.index(random_contact)
-    # add the selected contact to the selected group
-  #  app.contact.add_contact_to_group(random_contact.id, target_group.name, target_group.id)
+    # after the contact is added: number of contacts in the group where the new contact is added
+    new_contacts_in_group_list = db.get_contacts_for_current_group(gr.id)
+
+    assert len(new_contacts_in_group_list) == len(old_contacts_in_group_list) + 1
+
+    # check that the selected contact is in the selected group
+    assert db.contact_is_in_group(random_contact.id, gr.id)
